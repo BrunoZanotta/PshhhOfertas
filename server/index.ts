@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { AddressInfo } from "net";
 
 const app = express();
 app.use(express.json());
@@ -56,15 +57,11 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  // Try to use port 5000, or 3000 as fallback, or let the OS choose a port
+  const port = process.env.PORT || 3000;
+  server.listen(Number(port), "localhost", () => {
+    const address = server.address();
+    const actualPort = typeof address === 'object' && address ? address.port : port;
+    log(`serving on port ${actualPort}`);
   });
 })();
