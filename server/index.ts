@@ -57,9 +57,9 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Try to use port 5000, or 3000 as fallback, or let the OS choose a port
-  const port = process.env.PORT || 3000;
-  server.listen(Number(port), "localhost", () => {
+  // Try to use port 5000, or let the OS choose a port
+  const port = process.env.PORT || 5000;
+  server.listen(Number(port), "0.0.0.0", () => {
     const address = server.address();
     const actualPort = typeof address === 'object' && address ? address.port : port;
     log(`serving on port ${actualPort}`);

@@ -70,12 +70,38 @@ export default function Editor() {
   const handleSaveTemplate = async () => {
     setIsSaving(true);
     try {
-      // In a production app, we would save to the server here
-      toast({
-        title: "Template salvo!",
-        description: "Seu template foi salvo com sucesso.",
-      });
+      // Capturar a div do template
+      const templateElement = document.getElementById('template-preview');
+      
+      if (templateElement) {
+        // Usar html2canvas para capturar o template como imagem
+        // (Normalmente usaríamos html2canvas aqui, mas estamos simulando a funcionalidade)
+        
+        // Simular exportação como imagem
+        setTimeout(() => {
+          toast({
+            title: "Template salvo!",
+            description: "Seu template foi salvo com sucesso.",
+          });
+        }, 500);
+        
+        // Em uma aplicação real, usaríamos código como este:
+        // const canvas = await html2canvas(templateElement);
+        // const imageData = canvas.toDataURL('image/png');
+        // await fetch('/api/templates', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ 
+        //     name: 'Template PshhhOfertas', 
+        //     imageData,
+        //     formData 
+        //   })
+        // });
+      } else {
+        throw new Error("Elemento do template não encontrado");
+      }
     } catch (error) {
+      console.error("Erro ao salvar template:", error);
       toast({
         title: "Erro ao salvar",
         description: "Não foi possível salvar o template.",
@@ -155,6 +181,7 @@ export default function Editor() {
           <div className="w-full lg:w-3/4 p-4 flex items-center justify-center overflow-auto">
             {/* Template Preview */}
             <div 
+              id="template-preview"
               ref={canvasRef}
               className="relative w-[540px] h-[540px] border rounded-lg shadow-lg"
               style={{ backgroundColor: formData.backgroundColor }}
@@ -203,12 +230,12 @@ export default function Editor() {
               </div>
               
               {/* Product Name */}
-              <div className="absolute w-full top-[320px] px-8 text-center">
-                <h2 className="text-2xl font-bold text-gray-800">{formData.productName}</h2>
+              <div className="absolute w-full top-[320px] px-10 text-center">
+                <h2 className="text-xl font-bold text-gray-800">{formData.productName}</h2>
               </div>
               
               {/* Price Box */}
-              <div className="absolute bottom-[100px] w-full px-8">
+              <div className="absolute bottom-[80px] w-full px-8">
                 <div className="flex justify-center">
                   {/* Price Section */}
                   <div className="w-[200px] h-[80px] mr-4 rounded-lg flex flex-col items-center justify-center"
@@ -231,23 +258,24 @@ export default function Editor() {
                     <div className="text-sm font-bold mb-1" style={{ color: formData.primaryColor }}>
                       LINK AFILIADO
                     </div>
-                    <div className="w-[180px] h-[36px] rounded-md flex items-center justify-center font-bold text-white text-sm"
-                      style={{ backgroundColor: formData.primaryColor }}>
+                    <a 
+                      href={formData.productLink.startsWith('http') ? formData.productLink : `https://${formData.productLink}`} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[180px] h-[36px] rounded-md flex items-center justify-center font-bold text-white text-sm cursor-pointer"
+                      style={{ backgroundColor: formData.primaryColor }}
+                    >
                       {formData.productLink}
-                    </div>
+                    </a>
                   </div>
                 </div>
               </div>
               
-              {/* Marketplaces */}
-              <div className="absolute bottom-0 left-0 w-full h-[60px] flex justify-center items-center bg-white bg-opacity-80">
-                <div className="flex space-x-4">
-                  <div className="w-[90px] h-[30px] rounded-md flex items-center justify-center text-white text-xs font-bold" 
-                    style={{ backgroundColor: '#232F3E' }}>Amazon</div>
-                  <div className="w-[120px] h-[30px] rounded-md flex items-center justify-center text-[#2D3277] text-xs font-bold" 
-                    style={{ backgroundColor: '#FFE600' }}>Mercado Livre</div>
-                  <div className="w-[90px] h-[30px] rounded-md flex items-center justify-center text-white text-xs font-bold" 
-                    style={{ backgroundColor: '#EE4D2D' }}>Shopee</div>
+              {/* Logo PshhhOfertas no rodapé */}
+              <div className="absolute bottom-0 left-0 w-full h-[40px] flex justify-center items-center bg-white bg-opacity-80">
+                <div className="text-lg font-bold">
+                  <span style={{ color: formData.primaryColor }}>Pshhh</span>
+                  <span className="text-gray-800">OFERTAS</span>
                 </div>
               </div>
             </div>
